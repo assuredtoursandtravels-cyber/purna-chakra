@@ -1,0 +1,12 @@
+{
+  "name": "purna-chakra-netlify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Purna Chakra - Interactive Digital Prototype on Netlify (Functions + Database)",
+  "dependencies": {
+    "@netlify/database": "latest",
+    "@netlify/functions": "latest",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Purna Chakra</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f6f4ec;--card:#fff;--ink:#1d2a22;--mut:#5d6b62;--g:#1f5a38;--g2:#e1eedd;--line:#d9dccf;--err:#a3342b;--warn:#8a6a14;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121a15;--card:#1a251e;--ink:#e8efe9;--mut:#9fb0a5;--g:#6cc08b;--g2:#233a2b;--line:#2d3d33;--err:#ef8a80;--warn:#e0b94f}}
+:root[data-theme=dark]{--bg:#121a15;--card:#1a251e;--ink:#e8efe9;--mut:#9fb0a5;--g:#6cc08b;--g2:#233a2b;--line:#2d3d33;--err:#ef8a80;--warn:#e0b94f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 'Bricolage Grotesque',system-ui,sans-serif}
+h1,h2,h3{margin:0 0 .5rem;line-height:1.2}h1{font-size:1.7rem;font-weight:800}h2{font-size:1.25rem}h3{font-size:1rem}
+.wrap{max-width:520px;margin:0 auto;padding:1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;margin:0 0 1rem}
+label{display:block;font-size:.85rem;color:var(--mut);margin:.6rem 0 .2rem}
+input,select{width:100%;padding:.65rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:.7rem 1rem;background:var(--g);color:#fff;cursor:pointer;display:inline-block;text-decoration:none}
+:root:not([data-theme=light]) button.p{color:#fff}
+@media(prefers-color-scheme:dark){button,.btn{color:#0e1812}}
+button.s{background:var(--g2);color:var(--g)}button.w{width:100%;margin-top:1rem}button:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+a{color:var(--g)}.mut{color:var(--mut);font-size:.9rem}
+.tag{display:inline-block;font-size:.78rem;padding:.15rem .55rem;border-radius:99px;background:var(--g2);color:var(--g);font-weight:600}
+.tag.sim{background:#f3e7c2;color:#6b5210}
+@media(prefers-color-scheme:dark){.tag.sim{background:#3a3217;color:#e0b94f}}
+.err{color:var(--err);font-weight:600;margin-top:.6rem}.ok{color:var(--g);font-weight:600}
+.bal{font-size:3.4rem;font-weight:800;color:var(--g);line-height:1}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:.5rem}
+.row{display:flex;justify-content:space-between;gap:.5rem;padding:.55rem 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}
+nav.c{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}nav.c a{padding:.35rem .7rem;border-radius:99px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:.9rem}
+nav.c a.on{background:var(--g);color:#fff;border-color:var(--g)}
+.step{padding:.4rem 0;color:var(--mut)}.step.on{color:var(--g);font-weight:600}
+.big{font-size:2.4rem;font-weight:800;color:var(--g)}
+/* admin */
+.adm{display:grid;grid-template-columns:200px 1fr;min-height:100vh}
+.adm aside{background:var(--ink);color:var(--bg);padding:1rem .6rem}
+@media(prefers-color-scheme:dark){.adm aside{background:#0b120e;color:#e8efe9}}
+.adm aside a{display:block;color:inherit;text-decoration:none;padding:.45rem .7rem;font-size:.9rem;border-radius:6px;opacity:.8}
+.adm aside a.on{background:rgba(255,255,255,.14);opacity:1}
+.adm main{padding:1.2rem;min-width:0}
+.adm .card{border-radius:6px}.adm button,.adm .btn{border-radius:6px;padding:.45rem .8rem;font-size:.88rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem}.cards .card{margin:0}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.85rem}th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-weight:600}
+.inl{display:flex;gap:.5rem;flex-wrap:wrap;align-items:end}.inl>*{flex:1;min-width:110px}
+@media(max-width:700px){.adm{grid-template-columns:1fr}.adm aside{display:flex;overflow-x:auto;gap:.2rem;padding:.5rem}.adm aside a{white-space:nowrap}}
+</style></head><body><div id="app"></div>
+<script>
+"use strict";
+/* ===== API CLIENT (all authority lives on the server) ===== */
+let TOKEN=null;try{TOKEN=sessionStorage.getItem('pcact')}catch(e){}
+const saveTok=()=>{try{TOKEN?sessionStorage.setItem('pcact',TOKEN):sessionStorage.removeItem('pcact')}catch(e){}};
+async function api(m,p,b){
+ if(p==='/auth/logout'){TOKEN=null;saveTok();return{s:200,b:{}}}
+ try{
+  const r=await fetch('/api'+p,{method:m,headers:{'content-type':'application/json',...(TOKEN?{authorization:'Bearer '+TOKEN}:{})},body:m==='GET'?undefined:JSON.stringify(b||{})});
+  const j=await r.json().catch(()=>({error:'Unexpected server response.'}));
+  if(r.ok&&j.token){TOKEN=j.token;saveTok()}
+  return{s:r.status,b:j};
+ }catch(e){return{s:503,b:{error:'Unable to connect to the server. No points were added.'}}}
+}
+/* ===== UI ===== */
+const $=document.getElementById('app'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=i=>new Date(i).toLocaleString([], {dateStyle:'medium',timeStyle:'short'});
+let ME=null,S={station:null,session:null,result:null,eventId:null,busy:false};
+const go=h=>{location.hash=h};
+const newEv=()=>'SIM-'+(crypto.randomUUID?crypto.randomUUID().slice(0,8):Date.now());
+async function route(){
+ const h=(location.hash||'#/login').slice(1);
+ if(TOKEN){const r=await api('GET','/me');ME=r.s===200?r.b.user:null;if(!ME){TOKEN=null;saveTok()}}else ME=null;
+ if(h.startsWith('/admin')){ if(h==='/admin/login')return ME&&ME.role==='ADMIN'?go('#/admin'):adminLogin();
+  if(!ME||ME.role!=='ADMIN')return go('#/admin/login'); return adminView(h);}
+ if(h==='/login'||h==='/register')return ME&&ME.role==='CUSTOMER'?go('#/app'):authView(h==='/register');
+ if(!ME||ME.role!=='CUSTOMER')return go('#/login');
+ return custView(h);
+}
+addEventListener('hashchange',route);
+function authView(reg){
+ $.innerHTML=`<div class="wrap"><h1>Purna Chakra</h1><p class="mut">Completing the Cycle of Waste.</p><span class="tag sim">Interactive Digital Prototype / Concept Simulation</span>
+ <form class="card" id="f" style="margin-top:1rem"><h2>${reg?'Create account':'Log in'}</h2>
+ ${reg?'<label for="n">Name</label><input id="n" required autocomplete="name">':''}
+ <label for="e">Email</label><input id="e" type="email" required autocomplete="email"><label for="p">Password</label><input id="p" type="password" required minlength="${reg?8:1}" autocomplete="${reg?'new-password':'current-password'}">
+ <div class="err" id="er" role="alert"></div><button class="w">${reg?'Create account':'Log in'}</button></form>
+ <p>${reg?'Already registered? <a href="#/login">Log in</a>':'New here? <a href="#/register">Create an account</a>'}</p><p class="mut"><a href="#/admin/login">Administrator login</a></p></div>`;
+ document.getElementById('f').onsubmit=async e=>{e.preventDefault();const v=id=>document.getElementById(id)?.value;const er=document.getElementById('er');
+  let r=reg?await api('POST','/auth/register',{name:v('n'),email:v('e'),password:v('p')}):{s:201};
+  if(r.s>=400)return er.textContent=r.b.error;
+  r=await api('POST','/auth/login',{email:v('e'),password:v('p')});if(r.s>=400)return er.textContent=r.b.error;go('#/app')};
+}
+function adminLogin(){
+ $.innerHTML=`<div class="wrap"><form class="card" id="f" style="margin-top:3rem;border-radius:6px"><h2>ADMIN LOGIN</h2><label for="e">Email</label><input id="e" type="email" required autocomplete="username"><label for="p">Password</label><input id="p" type="password" required autocomplete="current-password">
+ <div class="err" id="er" role="alert"></div><button class="w" style="border-radius:6px">LOGIN</button></form><p class="mut"><a href="#/login">Customer login</a></p></div>`;
+ document.getElementById('f').onsubmit=async e=>{e.preventDefault();const r=await api('POST','/admin/login',{email:e.target.e.value,password:e.target.p.value});r.s>=400?document.getElementById('er').textContent=r.b.error:go('#/admin')};
+}
+const logout=async()=>{await api('POST','/auth/logout');S={station:null,session:null,result:null,eventId:null,busy:false};go('#/login')};
+function shell(h,body){const t=[['#/app','Home'],['#/app/scan','Scan'],['#/app/transactions','History'],['#/app/profile','Profile']];
+ $.innerHTML=`<div class="wrap"><div class="top"><strong>Purna Chakra</strong><button class="s" onclick="logout()">Log out</button></div><nav class="c" aria-label="Main">${t.map(([a,l])=>`<a href="${a}" class="${h===a.slice(1)?'on':''}">${l}</a>`).join('')}</nav>${body}</div>`}
+async function custView(h){
+ if(h==='/app'){const r=await api('GET',`/users/${ME.id}/transactions`);const tx=r.b.txns||[];
+  shell(h,`<div class="card"><div class="mut">Purna Points</div><div class="bal">${ME.balance}</div><div class="mut">Hello, ${esc(ME.name)}</div><a class="btn w" style="text-align:center;display:block;margin-top:1rem" href="#/app/scan">Scan machine QR</a></div>
+  <div class="card"><h3>Recent contributions</h3>${tx.slice(0,5).map(t=>`<div class="row"><span>${esc(t.subcategory||t.category)} · ${t.weightKg} kg</span><span class="ok">+${t.pointsAwarded}</span></div>`).join('')||'<p class="mut">No contributions yet. Scan a station to start.</p>'}</div>`);return}
+ if(h==='/app/scan'){shell(h,`<div class="card"><h2>Scan Purna Chakra machine</h2><p class="mut">Scan the QR displayed on the station. Camera scanning is not available in this prototype, so type the code printed under the QR.</p>
+  <label for="q">Station QR code</label><input id="q" placeholder="PURNA-001" autocapitalize="characters"><div class="err" id="er" role="alert"></div><button class="w" id="go">Verify station</button></div>`);
+  document.getElementById('go').onclick=async()=>{const q=document.getElementById('q').value,er=document.getElementById('er');er.textContent='';
+   if(!q.trim())return er.textContent='Unable to read QR. Please try again.';
+   const r=await api('POST','/stations/verify',{qr:q});if(r.s>=400)return er.textContent=r.b.error;S.station=r.b.station;S.qr=q.trim();
+   document.querySelector('.card').innerHTML=`<h2>${esc(S.station.id)}</h2><p class="ok">Station Verified ✓</p><button class="w" id="c">Continue</button>`;
+   document.getElementById('c').onclick=async()=>{const s=await api('POST','/sessions',{qr:S.qr});if(s.s>=400)return er.textContent=s.b.error;S.session=s.b.session;S.eventId=newEv();go('#/app/session')}};return}
+ if(h==='/app/session'){if(!S.session)return go('#/app/scan');
+  shell(h,`<div class="card"><h2>${esc(S.station.id)}</h2><p class="ok">Station Verified ✓</p><div class="row"><span>User</span><span>${esc(ME.name)}</span></div><div class="row"><span>Session</span><span>${S.session.id} · ACTIVE</span></div><p>Please deposit your waste.</p></div>
+  <div class="card"><span class="tag sim">Prototype Simulation</span><h3 style="margin-top:.5rem">Simulate machine reading</h3><p class="mut">No physical machine is connected. This stands in for the data an ESP32 controller would send.</p>
+  <label for="c">Category</label><select id="c"><option>WET</option><option selected>DRY</option><option>SANITARY</option><option>SPECIAL</option></select>
+  <div id="sw"><label for="sc">Dry subcategory</label><select id="sc"><option value="PLASTIC">Plastic</option><option value="METAL">Metal</option><option value="PAPER">Paper</option><option value="GLASS">Glass</option><option value="MIXED">Others / mixed</option></select></div>
+  <div class="inl"><div><label for="w">Weight</label><input id="w" type="number" step="any" value="0.2"></div><div><label for="u">Unit</label><select id="u"><option>kg</option><option>g</option></select></div></div>
+  <div class="err" id="er" role="alert"></div><button class="w" id="go">Send simulated deposit</button></div>`);
+  const c=document.getElementById('c');c.onchange=()=>document.getElementById('sw').style.display=c.value==='DRY'?'':'none';
+  document.getElementById('go').onclick=async e=>{if(S.busy)return;S.busy=true;e.target.disabled=true;const v=id=>document.getElementById(id).value;
+   const body={sessionId:S.session.id,category:v('c'),subcategory:v('c')==='DRY'?v('sc'):null,weight:v('w'),unit:v('u'),eventId:S.eventId};
+   processing();const [r]=await Promise.all([api('POST','/transactions',body).catch(()=>null),new Promise(r=>setTimeout(r,2000))]);S.busy=false;
+   if(!r){go('#/app/session');return alert('Unable to connect to the server. No points were added.')}
+   if(r.s>=400){go('#/app/session');setTimeout(()=>{const er=document.getElementById('er');if(er)er.textContent=r.b.error},50);return}
+   S.result=r.b;S.eventId=newEv();go('#/app/result');};return}
+ if(h==='/app/result'){const r=S.result;if(!r)return go('#/app');const t=r.tx;
+  shell(h,`<div class="card"><p class="ok" style="font-size:1.2rem">${r.duplicate?'This contribution has already been recorded.':'✓ CONTRIBUTION RECORDED'}</p><span class="tag sim">Prototype Simulation</span>
+  <h2 style="margin-top:.7rem">${esc(t.subcategory||t.category)} · ${t.weightKg} kg</h2><div class="big">+${t.pointsAwarded}</div><div class="mut">PURNA POINTS · ${t.pointRateUsed} pts/kg</div>
+  <div class="row"><span>${r.duplicate?'Balance':'Previous balance'}</span><span>${r.duplicate?r.balance:r.previousBalance}</span></div>${r.duplicate?'':`<div class="row"><span>New balance</span><strong>${r.balance}</strong></div>`}
+  <div class="row"><span>Station</span><span>${t.stationId}</span></div><div class="row"><span>Transaction</span><span>${t.id}</span></div>
+  <a class="btn w" style="display:block;text-align:center" href="#/app/session">Deposit more</a></div>`);return}
+ if(h==='/app/transactions'){const r=await api('GET',`/users/${ME.id}/transactions`);
+  shell(h,`<div class="card"><h2>Transaction history</h2>${r.b.txns.map(t=>`<div class="row"><span>${esc(t.subcategory||t.category)} · ${t.weightKg} kg<br><span class="mut">${t.stationId} · ${fmt(t.createdAt)}</span></span><span class="ok">+${t.pointsAwarded}</span></div>`).join('')||'<p class="mut">No transactions yet.</p>'}</div>`);return}
+ if(h==='/app/profile'){shell(h,`<div class="card"><h2>Profile</h2><div class="row"><span>Name</span><span>${esc(ME.name)}</span></div><div class="row"><span>Email</span><span>${esc(ME.email)}</span></div><div class="row"><span>User ID</span><span>${ME.id}</span></div><div class="row"><span>Balance</span><strong>${ME.balance}</strong></div></div>`);return}
+ go('#/app');
+}
+function processing(){const st=['Waste received','Category recorded','Weight recorded','Processing','Calculating Purna Points'];
+ $.innerHTML=`<div class="wrap"><div class="card"><h2>Processing</h2>${st.map((s,i)=>`<div class="step" id="st${i}">${s}</div>`).join('')}</div></div>`;
+ st.forEach((_,i)=>setTimeout(()=>{const e=document.getElementById('st'+i);if(e)e.classList.add('on')},i*380));}
+/* ===== ADMIN ===== */
+const NAV=[['','Dashboard'],['/stations','Machines'],['/qr','QR Management'],['/points','Point System'],['/customers','Customers'],['/transactions','Transactions'],['/collections','Collections'],['/events','System Events'],['/settings','Settings']];
+function ash(h,body){$.innerHTML=`<div class="adm"><aside><div style="padding:.4rem .7rem 1rem;font-weight:800">Purna Chakra<br><span style="font-weight:400;font-size:.75rem;opacity:.7">Admin</span></div>${NAV.map(([p,l])=>`<a href="#/admin${p}" class="${h==='/admin'+p?'on':''}">${l}</a>`).join('')}<a href="#" onclick="logout();return false">Log out</a></aside><main>${body}</main></div>`}
+const tbl=(h,rows)=>`<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')||`<tr><td colspan="${h.length}" class="mut">No data available.</td></tr>`}</tbody></table></div>`;
+async function adminView(h){
+ const A=async(m,p,b)=>{const r=await api(m,p,b);if(r.s===401||r.s===403){go('#/admin/login');throw 0}return r};
+ try{
+ if(h==='/admin'){const d=(await A('GET','/admin/dashboard')).b;ash(h,`<h1>Dashboard</h1><span class="tag sim">Prototype Data</span><div class="cards" style="margin-top:1rem">${[['Active stations',d.stations],['Registered customers',d.customers],['Total transactions',d.txns],['Purna Points awarded',d.points]].map(([l,v])=>`<div class="card"><div class="mut">${l}</div><div class="big">${v}</div></div>`).join('')}</div>`);return}
+ if(h==='/admin/stations'||h==='/admin/qr'){const ss=(await A('GET','/admin/stations')).b.stations,qrp=h==='/admin/qr';
+  ash(h,`<h1>${qrp?'QR Management':'Machines / Stations'}</h1>${qrp?'<p class="mut">The QR identifies the machine, never the customer. One active QR maps to exactly one station.</p>':''}<div class="card"><div class="tw"><table><thead><tr><th>ID</th><th>Name</th><th>Status</th><th>QR</th>${qrp?'':'<th>Location</th>'}<th>Updated</th><th></th></tr></thead><tbody>${ss.map(s=>`<tr><td>${s.id}</td><td>${esc(s.name)}</td><td>${s.status}</td><td>${esc(s.qr)} ${s.qrActive?'':'(inactive)'}</td>${qrp?'':`<td>${esc(s.location)}</td>`}<td>${fmt(s.updatedAt)}</td><td>${qrp?`<button data-q="${s.id}">View / replace</button> <button class="s" data-qt="${s.id}">${s.qrActive?'Deactivate':'Activate'} QR</button>`:`<button data-t="${s.id}">${s.status==='ACTIVE'?'Deactivate':'Activate'}</button> <button class="s" data-e="${s.id}">Edit</button>`}</td></tr>`).join('')}</tbody></table></div></div>
+  <div id="pn"></div>${qrp?'':`<form class="card" id="nf"><h3>Add station</h3><div class="inl"><div><label>ID</label><input name="id" placeholder="PURNA-003" required></div><div><label>Name</label><input name="name"></div><div><label>Location</label><input name="location"></div><div><label>QR (default: ID)</label><input name="qr"></div></div><div class="err" id="er" role="alert"></div><button style="margin-top:.7rem">Add station</button></form>`}`);
+  const patch=async(id,b)=>{const r=await api('PATCH','/admin/stations/'+id,b);if(r.s>=400)alert(r.b.error);else adminView(h)};
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>patch(b.dataset.t,{status:b.textContent==='Activate'?'ACTIVE':'INACTIVE'}));
+  document.querySelectorAll('[data-qt]').forEach(b=>b.onclick=()=>patch(b.dataset.qt,{qrActive:b.textContent.startsWith('Activate')}));
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const s=ss.find(x=>x.id===b.dataset.e);const n=prompt('Station name',s.name);if(n===null)return;const l=prompt('Location',s.location);patch(s.id,{name:n,location:l??s.location})});
+  document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const s=ss.find(x=>x.id===b.dataset.q);document.getElementById('pn').innerHTML=`<div class="card"><h3>${s.id}</h3><div id="qrc" style="background:#fff;padding:10px;display:inline-block"></div><p class="mut">Content: ${esc(s.qr)}</p><div class="inl"><div><input id="nq" value="${esc(s.qr)}"></div><button id="sv">Save QR</button></div></div>`;
+   try{new QRCode(document.getElementById('qrc'),{text:s.qr,width:140,height:140})}catch(e){document.getElementById('qrc').textContent='QR image unavailable'}
+   document.getElementById('sv').onclick=()=>patch(s.id,{qr:document.getElementById('nq').value})});
+  const nf=document.getElementById('nf');if(nf)nf.onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(nf));const r=await api('POST','/admin/stations',f);r.s>=400?document.getElementById('er').textContent=r.b.error:adminView(h)};return}
+ if(h==='/admin/points'){const r=(await A('GET','/admin/rates')).b.rates;
+  ash(h,`<h1>Point System</h1><span class="tag sim">Prototype Point Rates</span><p class="mut">Not official market rates. Changes apply to future transactions only; past transactions keep the rate they used.</p><form class="card" id="rf"><div class="inl">${Object.entries(r).map(([k,v])=>`<div><label>${k} (pts/kg)</label><input name="${k}" type="number" min="0" step="any" value="${v}"></div>`).join('')}</div><div class="err" id="er"></div><button style="margin-top:.7rem">Save rates</button></form>`);
+  document.getElementById('rf').onsubmit=async e=>{e.preventDefault();const b=Object.fromEntries(new FormData(e.target));const x=await api('PUT','/admin/rates',b);x.s>=400?document.getElementById('er').textContent=x.b.error:alert('Rates saved.')};return}
+ if(h==='/admin/customers'){const c=(await A('GET','/admin/customers')).b.customers;ash(h,`<h1>Customers</h1><input id="sq" placeholder="Search name, ID or email" style="max-width:320px;margin:.5rem 0"><div class="card" id="ct"></div><div id="cp"></div>`);
+  const draw=()=>{const q=document.getElementById('sq').value.toLowerCase();document.getElementById('ct').innerHTML=tbl(['Name','Customer ID','Email','Balance','Contributions',''],c.filter(x=>(x.name+x.id+x.email).toLowerCase().includes(q)).map(x=>[esc(x.name),x.id,esc(x.email),x.balance,x.count,`<button data-c="${x.id}">Open</button>`]));
+   document.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{const t=(await api('GET',`/users/${b.dataset.c}/transactions`)).b.txns;document.getElementById('cp').innerHTML=`<div class="card"><h3>${b.dataset.c} · contribution history</h3>${tbl(['Transaction','Station','Category','kg','Points','Date'],t.map(x=>[x.id,x.stationId,x.subcategory||x.category,x.weightKg,x.pointsAwarded,fmt(x.createdAt)]))}</div>`})};
+  document.getElementById('sq').oninput=draw;draw();return}
+ if(h==='/admin/transactions'){const t=(await A('GET','/admin/transactions')).b.txns;ash(h,`<h1>Transactions</h1><div class="inl card"><div><label>Station</label><input id="fs"></div><div><label>Category</label><input id="fc"></div><div><label>User</label><input id="fu"></div><div><label>Date (YYYY-MM-DD)</label><input id="fd"></div></div><div class="card" id="tt"></div>`);
+  const draw=()=>{const g=id=>document.getElementById(id).value.toLowerCase();document.getElementById('tt').innerHTML=tbl(['Transaction','User','Station','Category','Subcategory','kg','Rate','Points','Date/Time','Status','Source'],t.filter(x=>x.stationId.toLowerCase().includes(g('fs'))&&x.category.toLowerCase().includes(g('fc'))&&(x.userId+x.userName).toLowerCase().includes(g('fu'))&&x.createdAt.includes(g('fd'))).map(x=>[x.id,esc(x.userName)+' ('+x.userId+')',x.stationId,x.category,x.subcategory||'—',x.weightKg,x.pointRateUsed,x.pointsAwarded,fmt(x.createdAt),x.status,x.source]))};
+  ['fs','fc','fu','fd'].forEach(i=>document.getElementById(i).oninput=draw);draw();return}
+ if(h==='/admin/collections'){ash(h,`<h1>Collections</h1><span class="tag sim">Prototype / Simulated</span><div class="card"><p class="mut">No hardware is connected, so no compartment or fill-level data exists. Nothing is shown rather than invented.</p></div>`);return}
+ if(h==='/admin/events'){const e=(await A('GET','/admin/events')).b.events;ash(h,`<h1>System Events</h1><div class="card">${tbl(['Time','Event','Detail'],e.map(x=>[fmt(x.at),x.t,esc(x.d)]))}</div>`);return}
+ if(h==='/admin/settings'){ash(h,`<h1>Settings</h1><div class="card"><div class="row"><span>Mode</span><span>Interactive Digital Prototype / Concept Simulation</span></div><div class="row"><span>Hardware</span><span>Not connected</span></div><div class="row"><span>Session lifetime</span><span>5 minutes</span></div><div class="row"><span>Weight limit per deposit</span><span>50 kg</span></div><div class="row"><span>Data store</span><span>Netlify Database (Postgres)</span></div></div>`);
+  return}
+ go('#/admin')}catch(e){if(e!==0)throw e}
+}
+route();
+</script></body></html>
